@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+.pytest_cache/
+.coverage
+backend/logs/
+backend/reports/*.json
+backend/reports/coverage/
+*.db
+.env

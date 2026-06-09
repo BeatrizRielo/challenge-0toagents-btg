@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>🔒 Segurança — Hack Bank</title>
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+	<nav class="sidebar">
+		<div class="logo">🏦 Hack Bank</div>
+		<ul>
+			<li><a href="../index.html" class="nav-link">📋 Contas</a></li>
+			<li><a href="../index.html" class="nav-link">💸 Transferências</a></li>
+			<li><a href="security-report.html" class="nav-link active">🔒 Segurança</a></li>
+			<li><a href="quality-report.html" class="nav-link">✅ Qualidade ⭐</a></li>
+		</ul>
+	</nav>
+	<main class="content">
+		<div class="report-header">
+			<h1>🔒 Relatório de Segurança</h1>
+			<div>
+				<button class="btn btn-primary" id="btn-gen" onclick="gen()">🔄 Gerar</button>
+				<span id="score" class="score-badge" style="margin-left:1rem;">—</span>
+			</div>
+		</div>
+		<div class="stats-grid">
+			<div class="stat-card"><div class="value" id="s-crit">—</div><div class="label">Critical</div></div>
+			<div class="stat-card"><div class="value" id="s-high">—</div><div class="label">High</div></div>
+			<div class="stat-card"><div class="value" id="s-med">—</div><div class="label">Medium</div></div>
+			<div class="stat-card"><div class="value" id="s-low">—</div><div class="label">Low</div></div>
+		</div>
+		<div class="card">
+			<h2>Findings</h2>
+			<table id="findings">
+				<thead><tr><th>Severidade</th><th>Categoria</th><th>Descrição</th><th>Arquivo</th><th>Recomendação</th></tr></thead>
+				<tbody><tr><td colspan="5" style="text-align:center;color:var(--muted);">Clique em "Gerar" para escanear</td></tr></tbody>
+			</table>
+		</div>
+	</main>
+	<script>
+		const API = "http://localhost:8000";
+		async function gen() {
+			document.getElementById("btn-gen").textContent = "⏳ ...";
+			try { render(await (await fetch(`${API}/api/reports/security`, { method: "POST" })).json()); }
+			catch { alert("API offline?"); }
+			document.getElementById("btn-gen").textContent = "🔄 Gerar";
+		}
+		async function load() {
+			try { render(await (await fetch(`${API}/api/reports/security`)).json()); } catch {}
+		}
+		function render(d) {
+			const b = document.getElementById("score");
+			b.textContent = `${d.score}/100`;
+			b.className = `score-badge ${d.score >= 80 ? "score-high" : d.score >= 50 ? "score-mid" : "score-low"}`;
+			document.getElementById("s-crit").textContent = d.critical;
+			document.getElementById("s-high").textContent = d.high;
+			document.getElementById("s-med").textContent = d.medium;
+			document.getElementById("s-low").textContent = d.low;
+			const sev = { CRITICAL: "danger", HIGH: "warning", MEDIUM: "warning", LOW: "success" };
+			document.querySelector("#findings tbody").innerHTML = d.findings.length === 0
+				? '<tr><td colspan="5" style="text-align:center;color:var(--success);">✅ Nenhuma vulnerabilidade!</td></tr>'
+				: d.findings.map(f => `<tr><td><span class="badge badge-${sev[f.severity]}">${f.severity}</span></td>
+					<td>${f.category}</td><td>${f.description}</td><td><code>${f.location}</code></td>
+					<td>${f.recommendation}</td></tr>`).join("");
+		}
+		load();
+	</script>
+</body>
+</html>

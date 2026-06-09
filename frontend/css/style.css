@@ -1,0 +1,50 @@
+:root {
+	--bg: #0d1117; --bg-card: #161b22; --bg-sidebar: #010409;
+	--border: #30363d; --text: #e6edf3; --muted: #8b949e;
+	--accent: #1f6feb; --accent-hover: #388bfd;
+	--success: #3fb950; --danger: #f85149; --warning: #d29922;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 1.5rem 0; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+.logo { font-size: 1.4rem; font-weight: 700; padding: 0 1.2rem 1.5rem; border-bottom: 1px solid var(--border); }
+.sidebar ul { list-style: none; padding: 1rem 0; flex: 1; }
+.nav-link { display: block; padding: 0.6rem 1.2rem; color: var(--muted); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+.nav-link:hover, .nav-link.active { color: var(--text); background: rgba(31,111,235,0.1); border-left-color: var(--accent); }
+.health-status { padding: 0.8rem 1.2rem; font-size: 0.8rem; border-top: 1px solid var(--border); color: var(--muted); }
+.health-status.ok { color: var(--success); }
+.health-status.err { color: var(--danger); }
+.content { margin-left: 220px; padding: 2rem; flex: 1; max-width: 1000px; }
+h1 { font-size: 1.6rem; margin-bottom: 1.5rem; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h2 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--muted); }
+.form-row { display: flex; gap: 0.8rem; margin-bottom: 0.8rem; }
+.form-row input, .form-row select { flex: 1; padding: 0.6rem 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.9rem; }
+.form-row input:focus, .form-row select:focus { outline: none; border-color: var(--accent); }
+.btn { padding: 0.6rem 1.2rem; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+.btn-danger:hover { background: rgba(248,81,73,0.15); }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+.section { display: none; }
+.section.active { display: block; }
+.badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+.badge-success { background: rgba(63,185,80,0.2); color: var(--success); }
+.badge-danger { background: rgba(248,81,73,0.2); color: var(--danger); }
+.badge-warning { background: rgba(210,153,34,0.2); color: var(--warning); }
+.toast { position: fixed; bottom: 2rem; right: 2rem; padding: 0.8rem 1.2rem; border-radius: 8px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; z-index: 100; }
+.toast.show { opacity: 1; }
+.toast.success { background: var(--success); color: #fff; }
+.toast.error { background: var(--danger); color: #fff; }
+.report-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.score-badge { font-size: 2rem; font-weight: 700; padding: 0.5rem 1.5rem; border-radius: 12px; }
+.score-high { background: rgba(63,185,80,0.2); color: var(--success); }
+.score-mid { background: rgba(210,153,34,0.2); color: var(--warning); }
+.score-low { background: rgba(248,81,73,0.2); color: var(--danger); }
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.stat-card .value { font-size: 2rem; font-weight: 700; }
+.stat-card .label { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }

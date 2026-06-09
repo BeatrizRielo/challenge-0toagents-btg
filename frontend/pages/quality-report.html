@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>✅ Qualidade — Hack Bank</title>
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+	<nav class="sidebar">
+		<div class="logo">🏦 Hack Bank</div>
+		<ul>
+			<li><a href="../index.html" class="nav-link">📋 Contas</a></li>
+			<li><a href="../index.html" class="nav-link">💸 Transferências</a></li>
+			<li><a href="security-report.html" class="nav-link">🔒 Segurança</a></li>
+			<li><a href="quality-report.html" class="nav-link active">✅ Qualidade</a></li>
+		</ul>
+	</nav>
+	<main class="content">
+		<div class="report-header">
+			<h1>✅ Relatório de Qualidade</h1>
+			<div>
+				<button class="btn btn-primary" id="btn-gen" onclick="gen()">🧪 Executar Testes</button>
+				<span id="cov-badge" class="score-badge" style="margin-left:1rem;">—</span>
+			</div>
+		</div>
+		<div class="stats-grid">
+			<div class="stat-card"><div class="value" id="s-total">—</div><div class="label">Total Testes</div></div>
+			<div class="stat-card"><div class="value" id="s-pass" style="color:var(--success);">—</div><div class="label">Passed</div></div>
+			<div class="stat-card"><div class="value" id="s-fail" style="color:var(--danger);">—</div><div class="label">Failed</div></div>
+			<div class="stat-card"><div class="value" id="s-thresh">80%</div><div class="label">Threshold</div></div>
+		</div>
+		<div class="card">
+			<h2>Status</h2>
+			<div id="quality-status" style="text-align:center;padding:1rem;font-size:1.1rem;">
+				Clique em "Executar Testes" para verificar
+			</div>
+			<div style="width:100%;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:0.5rem 0;">
+				<div id="cov-bar" style="height:100%;width:0%;border-radius:4px;transition:width 0.5s;background:var(--accent);"></div>
+			</div>
+			<div style="display:flex;justify-content:space-between;margin-top:0.3rem;">
+				<span style="font-size:0.75rem;color:var(--muted);">0%</span>
+				<span style="font-size:0.75rem;color:var(--warning);">80% (threshold)</span>
+				<span style="font-size:0.75rem;color:var(--muted);">100%</span>
+			</div>
+		</div>
+		<div class="card">
+			<h2>Cobertura por Arquivo</h2>
+			<table id="files-table">
+				<thead><tr><th>Arquivo</th><th>Statements</th><th>Cobertas</th><th>Faltando</th><th>Cobertura</th></tr></thead>
+				<tbody><tr><td colspan="5" style="text-align:center;color:var(--muted);">Aguardando execução...</td></tr></tbody>
+			</table>
+		</div>
+	</main>
+	<script>
+		const API = "http://localhost:8000";
+		async function gen() {
+			const btn = document.getElementById("btn-gen");
+			btn.textContent = "⏳ Executando..."; btn.disabled = true;
+			try { render(await (await fetch(`${API}/api/reports/quality`, { method: "POST" })).json()); }
+			catch { alert("API offline?"); }
+			btn.textContent = "🧪 Executar Testes"; btn.disabled = false;
+		}
+		async function load() {
+			try { render(await (await fetch(`${API}/api/reports/quality`)).json()); } catch {}
+		}
+		function render(d) {
+			const b = document.getElementById("cov-badge");
+			b.textContent = `${d.coverage_percent.toFixed(1)}%`;
+			b.className = `score-badge ${d.meets_threshold ? "score-high" : d.coverage_percent >= 50 ? "score-mid" : "score-low"}`;
+			document.getElementById("s-total").textContent = d.total_tests;
+			document.getElementById("s-pass").textContent = d.passed;
+			document.getElementById("s-fail").textContent = d.failed;
+			const bar = document.getElementById("cov-bar");
+			bar.style.width = `${d.coverage_percent}%`;
+			bar.style.background = d.meets_threshold ? "var(--success)" : "var(--danger)";
+			const st = document.getElementById("quality-status");
+			if (d.meets_threshold) {
+				st.innerHTML = `✅ <strong>Aprovado!</strong> Cobertura ${d.coverage_percent.toFixed(1)}% ≥ ${d.threshold}%`;
+				st.style.color = "var(--success)";
+			} else {
+				st.innerHTML = `❌ <strong>Abaixo do threshold!</strong> Cobertura ${d.coverage_percent.toFixed(1)}% < ${d.threshold}%`;
+				st.style.color = "var(--danger)";
+			}
+			const tbody = document.querySelector("#files-table tbody");
+			if (!d.files_analyzed || d.files_analyzed.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);">Sem dados de cobertura</td></tr>';
+			} else {
+				tbody.innerHTML = d.files_analyzed.map(f => {
+					const c = f.coverage || 0;
+					const color = c >= 80 ? "var(--success)" : c >= 50 ? "var(--warning)" : "var(--danger)";
+					return `<tr><td><code>${f.file}</code></td><td>${f.statements}</td><td>${f.covered}</td>
+						<td>${f.missing}</td><td style="color:${color};font-weight:600;">${c.toFixed(1)}%</td></tr>`;
+				}).join("");
+			}
+		}
+		load();
+	</script>
+</body>
+</html>

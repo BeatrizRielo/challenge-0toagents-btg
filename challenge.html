@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>🏦 Challenge: From Zero to Agents</title>
+	<style>
+		:root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#e6edf3; --muted:#8b949e; --accent:#1f6feb; --green:#3fb950; --yellow:#d29922; --red:#f85149; --purple:#a371f7; --cyan:#79c0ff; }
+		* { margin:0; padding:0; box-sizing:border-box; }
+		body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+		.wrap { max-width:900px; margin:0 auto; padding:0 1.5rem; }
+		a { color:var(--accent); text-decoration:none; }
+
+		.hero { text-align:center; padding:3.5rem 1rem 2.5rem; border-bottom:1px solid var(--border); }
+		.hero h1 { font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:0.4rem; }
+		.hero p { color:var(--muted); font-size:1.05rem; max-width:560px; margin:0 auto; }
+
+		.pills { display:flex; justify-content:center; gap:0.8rem; flex-wrap:wrap; margin:1.5rem 0 0; }
+		.pill { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:0.5rem 1rem; font-size:0.9rem; }
+		.pill strong { color:var(--cyan); }
+
+		.rule { background:linear-gradient(135deg,rgba(31,111,235,0.12),rgba(163,113,247,0.12)); border:1px solid var(--accent); border-radius:10px; padding:1.2rem 1.5rem; text-align:center; margin:2rem 0; }
+		.rule .big { font-size:1.15rem; font-weight:700; }
+		.rule .sub { color:var(--muted); font-size:0.9rem; margin-top:0.3rem; }
+
+		section { padding:2.5rem 0; border-bottom:1px solid var(--border); }
+		section:last-of-type { border-bottom:none; }
+		h2 { font-size:1.4rem; margin-bottom:1.2rem; }
+
+		.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+		.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:0.8rem; }
+		.c { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.1rem; }
+		.c h4 { font-size:0.95rem; margin-bottom:0.3rem; }
+		.c p { font-size:0.82rem; color:var(--muted); margin:0; }
+		.c .icon { font-size:1.5rem; margin-bottom:0.4rem; }
+
+		.phase { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.3rem 1.5rem; margin-bottom:1rem; }
+		.phase-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.4rem; }
+		.phase-head h3 { font-size:1.05rem; margin:0; }
+		.badge { display:inline-block; padding:0.15rem 0.6rem; border-radius:20px; font-size:0.75rem; font-weight:600; }
+		.b-green { background:rgba(63,185,80,0.2); color:var(--green); }
+		.b-yellow { background:rgba(210,153,34,0.2); color:var(--yellow); }
+		.b-red { background:rgba(248,81,73,0.2); color:var(--red); }
+		.b-purple { background:rgba(163,113,247,0.2); color:var(--purple); }
+
+		.tasks { list-style:none; padding:0; }
+		.tasks li { padding:0.5rem 0; border-bottom:1px solid rgba(48,54,61,0.4); display:flex; gap:0.5rem; font-size:0.88rem; align-items:flex-start; }
+		.tasks li:last-child { border-bottom:none; }
+		.tag { font-size:0.68rem; padding:0.1rem 0.45rem; border-radius:4px; font-weight:600; white-space:nowrap; flex-shrink:0; margin-top:0.12rem; }
+		.t-fix { background:rgba(210,153,34,0.2); color:var(--yellow); }
+		.t-new { background:rgba(63,185,80,0.2); color:var(--green); }
+		.t-gen { background:rgba(121,192,255,0.2); color:var(--cyan); }
+
+		.score-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+		.score-table th,.score-table td { padding:0.45rem 0.7rem; text-align:left; border-bottom:1px solid var(--border); }
+		.score-table th { color:var(--muted); font-size:0.72rem; text-transform:uppercase; font-weight:600; }
+		.pts { text-align:center; color:var(--cyan); font-weight:700; }
+
+		.ranks { display:grid; grid-template-columns:repeat(4,1fr); gap:0.6rem; margin-top:1.2rem; }
+		.rank { text-align:center; padding:0.8rem 0.4rem; border-radius:8px; border:1px solid var(--border); background:var(--card); }
+		.rank .ri { font-size:1.6rem; }
+		.rank .rt { font-weight:700; font-size:0.82rem; margin:0.2rem 0; }
+		.rank .rr { font-size:0.72rem; color:var(--muted); }
+
+		.contract { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; margin-bottom:0.8rem; }
+		.contract h4 { font-size:0.9rem; color:var(--cyan); margin-bottom:0.5rem; font-family:monospace; }
+		.contract pre { background:var(--bg); border-radius:6px; padding:0.8rem; font-size:0.78rem; overflow-x:auto; color:var(--text); }
+
+		footer { text-align:center; padding:2rem 1rem; color:var(--muted); font-size:0.82rem; }
+
+		@media(max-width:700px) { .grid2,.grid3,.ranks { grid-template-columns:1fr 1fr; } .hero h1 { font-size:1.5rem; } }
+	</style>
+</head>
+<body>
+
+<header class="hero">
+	<div style="font-size:3rem;margin-bottom:0.5rem;">🏦</div>
+	<h1>From Zero to Agents</h1>
+	<p>Configure agents, prompts, instructions e skills do GitHub Copilot para gerar uma aplicação bancária completa.</p>
+	<div class="pills">
+		<div class="pill">⏱️ <strong>1h 30min</strong></div>
+		<div class="pill">👥 Até <strong>5 pessoas</strong></div>
+		<div class="pill">🤖 Apenas <strong>GitHub Copilot</strong></div>
+		<div class="pill">🏆 <strong>100 pontos</strong></div>
+	</div>
+</header>
+
+<div class="wrap">
+
+	<div class="rule">
+		<div class="big">⚠️ Não escreva código de aplicação manualmente</div>
+		<div class="sub">Configure os arquivos em <code>.github/</code> e use o Copilot Chat (Agent mode) para gerar o backend.</div>
+	</div>
+
+	<!-- OBJETIVO -->
+	<section>
+		<h2>🎯 Objetivo</h2>
+		<p style="color:var(--text);font-size:1rem;margin-bottom:1rem;">
+			Entregar uma API bancária funcional em Python (FastAPI) com CRUD de contas, transferências e relatório de segurança visível no frontend.
+		</p>
+		<div class="grid3">
+			<div class="c"><div class="icon">📋</div><h4>CRUD Contas</h4><p>Criar, listar, atualizar, excluir contas bancárias</p></div>
+			<div class="c"><div class="icon">💸</div><h4>Transferências</h4><p>Transferir saldo entre contas com validações</p></div>
+			<div class="c"><div class="icon">🔒</div><h4>Relatório Segurança</h4><p>Scan de vulnerabilidades com score no frontend</p></div>
+		</div>
+	</section>
+
+	<!-- O QUE CONFIGURAR -->
+	<section>
+		<h2>⚙️ Arquivos de Customização</h2>
+		<p style="color:var(--muted);margin-bottom:1rem;">Vocês vão corrigir 3 arquivos e criar 3 novos. Estes controlam como o Copilot entende o projeto.</p>
+		<div class="grid2">
+			<div class="c"><div class="icon">📜</div><h4>copilot-instructions.md</h4><p>Regras globais — aplica em todos os arquivos automaticamente</p></div>
+			<div class="c"><div class="icon">📐</div><h4>.instructions.md</h4><p>Regras por tipo de arquivo via <code>applyTo</code> glob</p></div>
+			<div class="c"><div class="icon">🤖</div><h4>.agent.md</h4><p>Agente especializado — invocado com <code>@nome</code> no Chat</p></div>
+			<div class="c"><div class="icon">💬</div><h4>.prompt.md</h4><p>Prompt reutilizável com <code>{{variáveis}}</code> — via 📎 no Chat</p></div>
+			<div class="c" style="grid-column:span 2;"><div class="icon">🧠</div><h4>SKILL.md</h4><p>Conhecimento de domínio bancário — ativado automaticamente por contexto</p></div>
+		</div>
+	</section>
+
+	<!-- FASES -->
+	<section>
+		<h2>📊 Fases</h2>
+
+		<div class="phase">
+			<div class="phase-head">
+				<h3>Fase 1 — Fundação</h3>
+				<div><span class="badge b-green">Fácil</span> <span class="badge b-purple">30 min</span> <span class="badge b-green">30 pts</span></div>
+			</div>
+			<ul class="tasks">
+				<li><span class="tag t-fix">CORRIGIR</span><span><strong>copilot-instructions.md</strong> — completar seções de segurança, testes e logs</span></li>
+				<li><span class="tag t-fix">CORRIGIR</span><span><strong>SKILL.md</strong> — adicionar regras de transferência, CPF e LGPD</span></li>
+				<li><span class="tag t-new">CRIAR</span><span><strong>python-backend.instructions.md</strong> — regras para <code>backend/**/*.py</code></span></li>
+				<li><span class="tag t-gen">GERAR</span><span><strong>models.py + database.py</strong> — usar Copilot Agent mode</span></li>
+			</ul>
+		</div>
+
+		<div class="phase">
+			<div class="phase-head">
+				<h3>Fase 2 — Geração</h3>
+				<div><span class="badge b-yellow">Médio</span> <span class="badge b-purple">30 min</span> <span class="badge b-yellow">40 pts</span></div>
+			</div>
+			<ul class="tasks">
+				<li><span class="tag t-new">CRIAR</span><span><strong>create-crud.prompt.md</strong> — prompt com <code>{{entity_name}}</code> que gera CRUD completo</span></li>
+				<li><span class="tag t-fix">CORRIGIR</span><span><strong>security-reviewer.agent.md</strong> — tools erradas, falta output format e rules</span></li>
+				<li><span class="tag t-gen">GERAR</span><span><strong>Backend completo</strong> — app.py, routes, services, health, swagger</span></li>
+			</ul>
+		</div>
+
+		<div class="phase">
+			<div class="phase-head">
+				<h3>Fase 3 — Segurança</h3>
+				<div><span class="badge b-red">Difícil</span> <span class="badge b-purple">30 min</span> <span class="badge b-red">30 pts</span></div>
+			</div>
+			<ul class="tasks">
+				<li><span class="tag t-new">CRIAR</span><span><strong>quality-reviewer.agent.md</strong> — agent que roda testes e verifica coverage</span></li>
+				<li><span class="tag t-gen">GERAR</span><span><strong>report_service.py + routes</strong> — relatório de segurança com score</span></li>
+				<li><span class="tag t-gen">VALIDAR</span><span><strong>Frontend</strong> — relatório visível em <code>/pages/security-report.html</code></span></li>
+			</ul>
+		</div>
+
+		<!-- BÔNUS -->
+		<div class="phase" style="border-color:var(--yellow);border-width:2px;">
+				<div class="phase-head">
+					<h3>⭐ Bônus — Qualidade Total</h3>
+					<div><span class="badge" style="background:rgba(210,153,34,0.3);color:var(--yellow);">Extra</span> <span class="badge b-purple">+20 pts</span></div>
+				</div>
+				<p style="font-size:0.88rem;color:var(--muted);margin-bottom:0.8rem;">Terminou as 3 fases? Vá além e conquiste o título de <strong>Legend</strong>.</p>
+				<ul class="tasks">
+					<li><span class="tag t-new">CRIAR</span><span><strong>quality-guardian.agent.md</strong> — agent QA que roda testes e verifica coverage ≥ 80%</span></li>
+					<li><span class="tag t-new">CRIAR</span><span><strong>quality-report.prompt.md</strong> — prompt para executar testes e gerar relatório JSON</span></li>
+					<li><span class="tag t-gen">GERAR</span><span><strong>Endpoint /api/reports/quality</strong> — retorna coverage, testes, files_analyzed</span></li>
+					<li><span class="tag t-gen">VALIDAR</span><span><strong>Testes ≥ 80%</strong> + relatório visível em <code>/pages/quality-report.html</code></span></li>
+				</ul>
+		</div>
+	</section>
+
+	<!-- CONTRATOS -->
+	<section>
+		<h2>📝 Contratos de API</h2>
+		<p style="color:var(--muted);margin-bottom:1rem;">O frontend já está pronto e espera <strong>exatamente</strong> alguns formatos JSON.</p>
+
+	</section>
+
+	<!-- PONTUAÇÃO -->
+	<section>
+		<h2>🏅 Pontuação</h2>
+		<table class="score-table">
+			<thead><tr><th>#</th><th>Entregável</th><th style="text-align:center;">Pts</th></tr></thead>
+			<tbody>
+				<tr><td>1</td><td><code>copilot-instructions.md</code> completo</td><td class="pts">10</td></tr>
+				<tr><td>2</td><td><code>SKILL.md</code> com regras bancárias</td><td class="pts">10</td></tr>
+				<tr><td>3</td><td><code>python-backend.instructions.md</code> criado</td><td class="pts">10</td></tr>
+				<tr><td>4</td><td><code>create-crud.prompt.md</code> funcional</td><td class="pts">15</td></tr>
+				<tr><td>5</td><td><code>security-reviewer.agent.md</code> corrigido</td><td class="pts">10</td></tr>
+				<tr><td>6</td><td><code>quality-reviewer.agent.md</code> criado</td><td class="pts">10</td></tr>
+				<tr><td>7</td><td>Backend roda + Swagger + Health</td><td class="pts">10</td></tr>
+				<tr><td>8</td><td>CRUD contas + transferências (contratos OK)</td><td class="pts">15</td></tr>
+				<tr><td>9</td><td>Relatório de segurança no frontend</td><td class="pts">10</td></tr>
+				<tr style="font-weight:700;border-top:2px solid var(--accent);"><td></td><td>TOTAL</td><td class="pts" style="font-size:1.05rem;">100</td></tr>
+					<tr><td colspan="3" style="padding-top:1rem;color:var(--yellow);font-weight:600;">⭐ BÔNUS</td></tr>
+					<tr><td>B1</td><td><code>quality-guardian.agent.md</code> criado</td><td class="pts">5</td></tr>
+					<tr><td>B2</td><td><code>quality-report.prompt.md</code> criado</td><td class="pts">5</td></tr>
+					<tr><td>B3</td><td>Testes passando ≥ 80% coverage</td><td class="pts">5</td></tr>
+					<tr><td>B4</td><td>Relatório de qualidade no frontend</td><td class="pts">5</td></tr>
+					<tr style="font-weight:700;border-top:2px solid var(--yellow);"><td></td><td>TOTAL COM BÔNUS</td><td class="pts" style="font-size:1.05rem;">120</td></tr>
+			</tbody>
+		</table>
+
+		<div class="ranks" style="grid-template-columns:repeat(5,1fr);">
+			<div class="rank" style="border-color:var(--yellow);"><div class="ri">💎</div><div class="rt">Legend</div><div class="rr">110–120</div></div>
+			<div class="rank"><div class="ri">🏆</div><div class="rt">Master</div><div class="rr">90–109</div></div>
+			<div class="rank"><div class="ri">🥈</div><div class="rt">Expert</div><div class="rr">70–89</div></div>
+			<div class="rank"><div class="ri">🥉</div><div class="rt">Practitioner</div><div class="rr">50–69</div></div>
+			<div class="rank"><div class="ri">📚</div><div class="rt">Learner</div><div class="rr">0–49</div></div>
+		</div>
+	</section>
+
+</div>
+
+<footer>
+	<strong>From Zero to Agents</strong> — Challenge powered by <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a><br>
+	Detalhes completos: <code>CHALLENGE.md</code> · Dicas: <code>HINTS.md</code> (-2 pts cada)
+</footer>
+
+</body>
+</html>

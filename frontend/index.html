@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>🏦 Hack Bank</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<nav class="sidebar">
+		<div class="logo">🏦 Hack Bank</div>
+		<ul>
+			<li><a href="#" class="nav-link active" data-section="accounts">📋 Contas</a></li>
+			<li><a href="#" class="nav-link" data-section="transfers">💸 Transferências</a></li>
+			<li><a href="pages/security-report.html">🔒 Segurança</a></li>
+			<li><a href="pages/quality-report.html">✅ Qualidade ⭐</a></li>
+		</ul>
+		<div class="health-status" id="health-status">⏳ Checking...</div>
+	</nav>
+
+	<main class="content">
+		<section id="section-accounts" class="section active">
+			<h1>📋 Contas Bancárias</h1>
+			<div class="card form-card">
+				<h2>Nova Conta</h2>
+				<form id="account-form">
+					<div class="form-row">
+						<input type="text" id="holder_name" placeholder="Nome do titular" required minlength="3">
+						<input type="text" id="document" placeholder="CPF (11 dígitos)" required pattern="\d{11}">
+					</div>
+					<div class="form-row">
+						<select id="account_type">
+							<option value="checking">Conta Corrente</option>
+							<option value="savings">Poupança</option>
+							<option value="investment">Investimento</option>
+						</select>
+						<input type="number" id="initial_balance" placeholder="Saldo inicial" min="0" step="0.01" value="0">
+					</div>
+					<button type="submit" class="btn btn-primary">Criar Conta</button>
+				</form>
+			</div>
+			<div class="card">
+				<h2>Contas Ativas</h2>
+				<table id="accounts-table">
+					<thead><tr><th>ID</th><th>Titular</th><th>CPF</th><th>Tipo</th><th>Saldo</th><th>Ações</th></tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</section>
+
+		<section id="section-transfers" class="section">
+			<h1>💸 Transferências</h1>
+			<div class="card form-card">
+				<h2>Nova Transferência</h2>
+				<form id="transfer-form">
+					<div class="form-row">
+						<select id="from_account" required><option value="">Origem...</option></select>
+						<select id="to_account" required><option value="">Destino...</option></select>
+					</div>
+					<div class="form-row">
+						<input type="number" id="transfer_amount" placeholder="Valor" min="0.01" step="0.01" required>
+						<input type="text" id="transfer_desc" placeholder="Descrição">
+					</div>
+					<button type="submit" class="btn btn-primary">Transferir</button>
+				</form>
+			</div>
+			<div class="card">
+				<h2>Histórico</h2>
+				<table id="transfers-table">
+					<thead><tr><th>ID</th><th>Origem</th><th>Destino</th><th>Valor</th><th>Descrição</th><th>Status</th><th>Data</th></tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</section>
+	</main>
+
+	<div id="toast" class="toast"></div>
+	<script src="js/app.js"></script>
+</body>
+</html>
